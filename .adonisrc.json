@@ -1,6 +1,10 @@
 {
   "typescript": true,
-  "commands": ["./commands", "@adonisjs/core/build/commands/index.js"],
+  "commands": [
+    "./commands",
+    "@adonisjs/core/build/commands/index.js",
+    "@adonisjs/lucid/build/commands"
+  ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
     "App": "app",
@@ -9,7 +13,13 @@
     "Contracts": "contracts"
   },
   "preloads": ["./start/routes", "./start/kernel"],
-  "providers": ["./providers/AppProvider", "@adonisjs/core", "@adonisjs/view", "@adonisjs/ally"],
+  "providers": [
+    "./providers/AppProvider",
+    "@adonisjs/core",
+    "@adonisjs/view",
+    "@adonisjs/ally",
+    "@adonisjs/lucid"
+  ],
   "metaFiles": [
     {
       "pattern": "public/**",
