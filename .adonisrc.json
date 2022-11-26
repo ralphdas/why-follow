@@ -9,10 +9,14 @@
     "Contracts": "contracts"
   },
   "preloads": ["./start/routes", "./start/kernel"],
-  "providers": ["./providers/AppProvider", "@adonisjs/core"],
+  "providers": ["./providers/AppProvider", "@adonisjs/core", "@adonisjs/view", "@adonisjs/ally"],
   "metaFiles": [
     {
       "pattern": "public/**",
+      "reloadServer": false
+    },
+    {
+      "pattern": "resources/views/**/*.edge",
       "reloadServer": false
     }
   ],

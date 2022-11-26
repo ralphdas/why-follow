@@ -18,8 +18,12 @@
 |
 */
 
-import Route from '@ioc:Adonis/Core/Route'
+import Route from '@ioc:Adonis/Core/Route';
 
-Route.get('/', async () => {
-  return 'Start of whyFollow 2.0'
-})
+Route.get('/', async ({ view }) => {
+  return view.render('home');
+});
+
+Route.get('/:username', async ({ view, params: { username } }) => {
+  return view.render('profile', { username });
+});
