@@ -20,10 +20,35 @@
 
 import Route from '@ioc:Adonis/Core/Route';
 
-Route.get('/', async ({ view }) => {
-  return view.render('home');
-});
+Route.get(
+  '/',
+  async ({ inertia }) => await inertia.render('Home', { testProp: 'test' })
+);
 
-Route.get('/:username', async ({ view, params: { username } }) => {
-  return view.render('profile', { username });
+Route.get('/profile/create', 'ProfileHttpController.create');
+Route.get('/profile/:username?', 'ProfileHttpController.show');
+
+Route.group(() => {
+  Route.get('/questions', 'QuestionHttpController.index');
+  Route.post('/questions', 'QuestionHttpController.create');
+  Route.get('/questions/:questionId', 'QuestionHttpController.show');
+  Route.put('/questions/:questionId', 'QuestionHttpController.edit');
+  Route.delete('/questions/:questionId', 'QuestionHttpController.destroy');
+}).prefix('api');
+
+Route.get(
+  '/:oauthProviderString/callback',
+  'ExternalAuthHttpController.callback'
+);
+
+Route.get(
+  '/:oauthProviderString/redirect',
+  'ExternalAuthHttpController.redirect'
+);
+/*
+  Logout the user
+*/
+Route.get('/logout', async ({ auth, response }) => {
+  await auth.logout();
+  response.redirect('/');
 });

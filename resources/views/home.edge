@@ -1,1 +1,32 @@
-<p>Hallo world you are now on the homepage</p>
+@layout('layouts/main')
+@set('title', 'Homepage')
+
+@section('body')
+
+
+<p>Homepage</p>
+
+@if(auth.user)
+<p>You are logged in as: {{auth.user.username}}</p>
+<ul>
+    @if(auth.user.hasProfile)
+    <li>
+        <a href="/profile/">Go to my profile</a>
+    </li>
+    @else
+    <li>
+        <a href="/profile/create">Create a new profile</a>
+
+    </li>
+
+    @end
+    <li>
+        <a href="/logout">Logout</a>
+
+    </li>
+</ul>
+@else
+<a href="/twitter/redirect">Log in through Twitter</a>
+@end
+
+@end

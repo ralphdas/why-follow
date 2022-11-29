@@ -1,1 +1,143 @@
-<p>You are now on the profile page of {{ username }}</p>
+@layout('layouts/main')
+@set('title', 'Profile: @' + profileUser.username)
+
+@section('body')
+
+
+
+<form action="">
+    <ul>
+        @each((question, index) in profileUser.questions)
+        <li class="transition-colors hover:bg-gray-100">
+            <div class="flex flex-col mt-6 border border-gray-300 md:flex-row">
+
+                <div class="flex-auto flex flex-col justify-center p-6">
+                    <span class="uppercase text-sm font-bold text-gray-500 mb-2 antialiased">question #{{index +
+                        1}}</span>
+                    <span contenteditable class="block text-3xl font-bold mb-2 antialiased">{{ question.content.title
+                        }}</span>
+                    <span contenteditable class="text-lg text-gray-700 antialiased">
+                        {{question.content.description}}
+                    </span>
+                </div>
+                <div class="flex-none flex">
+                    <button
+                        class="md:w-32 md:h-full flex-1 transition-colors md:flex-col justify-center items-center flex border-t md:border-t-0 md:border-l border-gray-300 hover:bg-gray-900 hover:text-gray-50 p-6 ">
+                        <i class="ph-pencil text-2xl mr-1 md:mr-0 md:mb-1"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button
+                        class="md:w-32 md:h-full flex-1 transition-colors md:flex-col justify-center items-center flex border-t border-l md:border-t-0  md:border-l border-gray-300 hover:bg-gray-900 hover:text-gray-50 p-6 ">
+                        <i class="ph-trash text-2xl mr-1 md:mr-0 md:mb-1"></i>
+                        <span>Delete</span>
+                    </button>
+                </div>
+            </div>
+            <div class="w-full border border-gray-300 border-t-0 p-6">
+                <h6 class="uppercase text-sm font-bold text-gray-500 mb-2">Answers:</h6>
+                <div class="w-full">
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        @each((answer, index) in question.answers)
+                        <div
+                            class="flex  flex-col group bg-gray-200 transition-colors hover:bg-gray-900 border hover:text-gray-50 border-gray-300 -m-px">
+
+                            <div class="p-6 flex-grow">
+                                <span class="inline-block">
+                                    <i class="ph-lightbulb-filament text-2xl relative top-1"></i>
+                                </span>
+                                <span contenteditable class="inline-block text-xl font-bold mb-2 antialiased">{{
+                                    answer.content.title }}</span>
+                                <span contenteditable class="text-lg block antialiased">
+                                    {{answer.content.description}}
+                                </span>
+                            </div>
+                            @if (loggedInUser && loggedInUser.userId === profileUser.userId)
+                            <div class="flex flex-none border border-gray-300 -m-px">
+                                <button class=" flex-none transition-colors md:flex-col justify-center items-center flex
+                                    border border-gray-300 hover:bg-gray-900 hover:text-gray-50 p-4 -m-px">
+                                    <i class="text-xl mr-1 md:mr-0 md:mb-1 ph-thumbs-down"></i>
+                                </button>
+                                <button class=" flex-1">
+                                    <i class="text-xl text-gray-400 mr-1 md:mr-0 md:mb-1 ph-star"></i>
+                                </button>
+                                <button class=" flex-1">
+                                    <i class="text-xl text-gray-400 mr-1 md:mr-0 md:mb-1 ph-star"></i>
+                                </button>
+                                <button class=" flex-1">
+                                    <i class="text-xl text-gray-400 mr-1 md:mr-0 md:mb-1 ph-star"></i>
+                                </button>
+                                <button class=" flex-1">
+                                    <i class="text-xl text-gray-400 mr-1 md:mr-0 md:mb-1 ph-star"></i>
+                                </button>
+                                <button class=" flex-1">
+                                    <i class="text-xl text-gray-400 mr-1 md:mr-0 md:mb-1 ph-star"></i>
+                                </button>
+
+                                <button
+                                    class="flex-none transition-colors md:flex-col justify-center items-center flex border border-gray-300 hover:bg-gray-900 hover:text-gray-50 p-4 -m-px">
+                                    <i class="text-xl mr-1 md:mr-0 md:mb-1 ph-thumbs-up"></i>
+                                </button>
+                            </div>
+                            @end
+                            <div class="flex flex-none border border-gray-300 -m-px">
+                                <!-- Results of answers -->
+                                <div class="flex flex-1 justify-center items-center h-full">
+                                    <div class="flex flex-col justify-center items-center p-6">
+                                        <span class="text-2xl font-light">556</span>
+                                        <span class="text-xs uppercase font-medium">Votes</span>
+                                    </div>
+                                    <div class="flex flex-col justify-center items-center p-6">
+                                        <span class="text-2xl font-light">14%</span>
+                                        <span class=" text-xs uppercase font-medium">Choice</span>
+                                    </div>
+
+                                    <div class="flex flex-col justify-center items-center p-6">
+                                        <span class="text-2xl font-light">4.5</span>
+                                        <span class=" text-xs uppercase font-medium">Score</span>
+                                    </div>
+
+                                    <div
+                                        class="hidden flex-1 xl:flex items-center justify-center -space-x-1 h-20 border-l border-gray-300 -m-px overflow-clip">
+
+                                        <img class=" inline-block h-8 w-8 rounded-full ring-1 ring-gray-400"
+                                            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                                            alt="Image Description">
+                                        <img class="inline-block h-8 w-8 rounded-full ring-1 ring-gray-400"
+                                            src="https://images.unsplash.com/photo-1531927557220-a9e23c1e4794?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                                            alt="Image Description">
+                                        <img class="inline-block h-8 w-8 rounded-full ring-1 ring-gray-400"
+                                            src="https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&&auto=format&fit=facearea&facepad=3&w=300&h=300&q=80"
+                                            alt="Image Description">
+                                        <img class="inline-block h-8 w-8 rounded-full ring-1 ring-gray-400"
+                                            src="https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&&auto=format&fit=facearea&facepad=3&w=300&h=300&q=80"
+                                            alt="Image Description">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @end
+                        <div class=" block group bg-gray-200 transition-colors hover:bg-gray-900 border
+                                                hover:text-gray-50 border-gray-300 -m-px">
+                            <button
+                                class="flex h-full w-full justify-center items-center text-gray-600 border-gray-300 p-4 group-hover:bg-gray-900 group-hover:text-gray-50 ">
+                                <i class="ph-plus-circle-fill text-2xl pr-2"></i>
+                                <span class="font-bold text-sm uppercase">Add another
+                                    answer</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </li>
+        @end
+        <li class="flex transition-colors hover:bg-gray-100 flex border border-gray-300 -m-px">
+            <button
+                class="flex items-center justify-center p-6 flex-1 text-gray-600 border-gray-300 hover:bg-gray-900 hover:text-gray-50 ">
+                <i class="ph-plus-circle-fill text-2xl pr-2"></i>
+                <span class="font-bold text-sm uppercase">Add another question</span>
+            </button>
+        </li>
+    </ul>
+</form>
+
+@end

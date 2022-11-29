@@ -526,6 +526,64 @@
           "description": "Drop all custom types (Postgres only)"
         }
       ]
+    },
+    "make:policy": {
+      "settings": {},
+      "commandPath": "@adonisjs/bouncer/build/commands/MakePolicy",
+      "commandName": "make:policy",
+      "description": "Make a new bouncer policy",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the policy to create"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "resource-model",
+          "propertyName": "resourceModel",
+          "type": "string",
+          "description": "Name of the resource model to authorize"
+        },
+        {
+          "name": "user-model",
+          "propertyName": "userModel",
+          "type": "string",
+          "description": "Name of the user model to be authorized"
+        },
+        {
+          "name": "actions",
+          "propertyName": "actions",
+          "type": "array",
+          "description": "Actions to implement"
+        }
+      ]
+    },
+    "ssr:build": {
+      "settings": {
+        "stayAlive": true
+      },
+      "commandPath": "@eidellev/inertia-adonisjs/build/commands/Build",
+      "commandName": "ssr:build",
+      "description": "Build and watch files for changes",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
+    "ssr:watch": {
+      "settings": {
+        "stayAlive": true
+      },
+      "commandPath": "@eidellev/inertia-adonisjs/build/commands/Watch",
+      "commandName": "ssr:watch",
+      "description": "Build and watch files for changes",
+      "args": [],
+      "aliases": [],
+      "flags": []
     }
   },
   "aliases": {}
