@@ -4,6 +4,7 @@ import {
   BelongsTo,
   belongsTo,
   column,
+  computed,
   hasMany,
   HasMany,
 } from '@ioc:Adonis/Lucid/Orm';
@@ -11,6 +12,8 @@ import User from './User';
 import Answer from './Answer';
 
 export default class Question extends BaseModel {
+  private _editMode: boolean = false;
+
   @column({ isPrimary: true })
   public id: number;
 
@@ -42,4 +45,9 @@ export default class Question extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
+
+  @computed()
+  public get editMode() {
+    return this._editMode;
+  }
 }

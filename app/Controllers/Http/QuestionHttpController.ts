@@ -33,14 +33,17 @@ export default class QuestionHttpController {
       request.body()
     );
 
-    const createdQuestion = await this._questionModelController.create({
+    const newQuestion = await this._questionModelController.create({
       userId: auth.user.id,
       title,
       description,
       languageCode,
+      editMode: true,
     });
 
-    response.json({ payload: createdQuestion });
+    await newQuestion.save();
+
+    response.redirect(`/profile/${auth.user.username}`);
   }
 
   public async edit({
@@ -61,13 +64,13 @@ export default class QuestionHttpController {
 
     const { title, description } = <EditRequestBody>request.body();
 
-    const editedQuestion = await this._questionModelController.edit({
+    await this._questionModelController.edit({
       questionId,
       title,
       description,
     });
 
-    response.json({ payload: editedQuestion });
+    response.redirect(`/profile/${auth.user.username}`);
   }
 
   public async destroy({
@@ -86,7 +89,7 @@ export default class QuestionHttpController {
       questionId,
     });
 
-    response.json({ payload: 'success' });
+    response.redirect(`/profile/${auth.user.username}`);
   }
 
   public async index({ auth, response }: HttpContextContract): Promise<void> {

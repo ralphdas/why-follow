@@ -11,13 +11,14 @@ export default class QuestionModelController {
     title: string;
     description: string;
     languageCode: string;
+    editMode: boolean;
   }) {
     // create a demo question
     const demoQuestion: Question = new Question();
     demoQuestion.content = { title, description };
     demoQuestion.userId = userId;
     demoQuestion.languageCode = languageCode;
-    return await demoQuestion.save();
+    return demoQuestion;
   }
 
   public async edit({

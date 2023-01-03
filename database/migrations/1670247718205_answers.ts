@@ -9,7 +9,12 @@ export default class extends BaseSchema {
       table.jsonb('content').notNullable();
       table.string('language_code', 2).notNullable(); // ISO 639-1 "fr" "nl"
       table.string('author_id').notNullable().references('users.id');
-      table.integer('question_id').notNullable().references('questions.id');
+      table
+        .integer('question_id')
+        .notNullable()
+        .unsigned()
+        .references('questions.id')
+        .onDelete('CASCADE');
       table.timestamp('created_at', { useTz: true });
       table.timestamp('updated_at', { useTz: true });
     });

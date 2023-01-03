@@ -19,7 +19,10 @@ export default class ProfileModelController {
       title: 'Favorite color?',
       description: 'Explain why you like this color.',
       languageCode: 'en',
+      editMode: false,
     });
+
+    await createdQuestion.save();
 
     const titles = ['Red', 'Green', 'Blue', 'Yellow', 'Orange'];
     const descriptions = [

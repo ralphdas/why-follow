@@ -1,64 +1,84 @@
-import React from 'react';
-import { QuestionState, useQuestionsStore } from '../stores/QuestionsStore';
+import { Inertia } from '@inertiajs/inertia';
+import Question from 'App/Models/Question';
+import React, { useEffect, useRef } from 'react';
 import QuestionBtnComponent from './QuestionBtnComponent';
 import QuestionTextWrapperComponent from './QuestionTextWrapperComponent';
 
 export default function QuestionComponent({
+  index,
   question,
-  isEditModeEnabled,
-  editMode,
+  editModeEnabledByDefault = false,
+  isOwnProfile = false,
+  hideQuestion,
 }: {
-  question: QuestionState;
-  isEditModeEnabled: boolean;
-  editMode: boolean;
+  index: number;
+  question: Question;
+  editModeEnabledByDefault?: boolean;
+  isOwnProfile?: boolean;
+  hideQuestion?: () => void;
 }) {
-  const [
-    toggleEditModeById,
-    deleteQuestionById,
-    updateContentById,
-    persistQuestion,
-    removeNonPersistedEntries,
-  ] = useQuestionsStore((state) => [
-    state.toggleEditModeById,
-    state.deleteQuestionById,
-    state.updateContentById,
-    state.persistQuestion,
-    state.removeNonPersistedEntries,
-  ]);
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const descriptionRef = useRef<HTMLSpanElement>(null);
+  const initialTitle = question.content.title;
+  const initialDescription = question.content.description;
 
-  const toggleEditMode = () => {
-    toggleEditModeById(question.id);
-  };
+  const [editMode, setEditMode] = React.useState(false);
 
-  function updateOrPersistQuestion() {
-    const title = document.getElementById(
-      `question-${question.id}-title`
-    ) as HTMLSpanElement;
-    const description = document.getElementById(
-      `question-${question.id}-description`
-    ) as HTMLSpanElement;
-
-    // update or persist question
-    if (question.isPersisted) {
-      // update
-      updateContentById(question.id, title.innerText, description.innerText);
-      toggleEditMode();
-    } else {
-      // persist
-      persistQuestion(question.id, title.innerText, description.innerText);
-      toggleEditMode();
+  useEffect(() => {
+    if (editModeEnabledByDefault) {
+      setEditMode(true);
     }
-  }
+  }, [editModeEnabledByDefault]);
+
+  useEffect(() => {
+    if (editMode) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        const range = document.createRange();
+        range.selectNodeContents(titleRef.current!);
+        selection.addRange(range);
+        titleRef.current!.focus();
+      }
+    }
+  }, [editMode]);
 
   function onKeyDownHandler(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
       e.preventDefault();
       // submit updated values
-      updateOrPersistQuestion();
+      save();
     }
     if (e.key === 'Escape') {
       // reset updated values
-      toggleEditMode();
+      reset();
+    }
+  }
+
+  function save() {
+    if (editModeEnabledByDefault) {
+      Inertia.post('/api/questions', {
+        title: titleRef.current?.innerText as string,
+        description: descriptionRef.current?.innerText as string,
+        languageCode: 'en',
+      });
+      hideQuestion && hideQuestion();
+    } else {
+      Inertia.put('/api/questions/' + question.id, {
+        title: titleRef.current?.innerText as string,
+        description: descriptionRef.current?.innerText as string,
+      });
+    }
+    setEditMode(false);
+  }
+
+  function reset() {
+    if (editModeEnabledByDefault) {
+      hideQuestion && hideQuestion();
+    } else {
+      titleRef.current!.innerText = initialTitle;
+      descriptionRef.current!.innerText = initialDescription;
+      setEditMode(false);
     }
   }
 
@@ -69,24 +89,29 @@ export default function QuestionComponent({
         className="flex flex-col mt-6 border border-gray-300 md:flex-row"
       >
         <QuestionTextWrapperComponent
-          content={{ title: question.title, description: question.description }}
-          index={question.id}
+          content={question.content}
+          index={index}
           editMode={editMode}
+          titleRef={titleRef}
+          descriptionRef={descriptionRef}
         ></QuestionTextWrapperComponent>
-        {isEditModeEnabled && (
+        {isOwnProfile && (
           <div className="flex-none flex">
             {!editMode ? (
               <>
                 <QuestionBtnComponent
                   iconName="Pencil"
                   label="edit"
-                  onClick={toggleEditMode}
+                  onClick={() => {
+                    setEditMode(true);
+                  }}
                 ></QuestionBtnComponent>
                 <QuestionBtnComponent
                   iconName="Trash"
                   label="delete"
                   onClick={() => {
-                    deleteQuestionById(question.id);
+                    console.log('delete');
+                    Inertia.delete('/api/questions/' + question.id);
                   }}
                 ></QuestionBtnComponent>
               </>
@@ -96,7 +121,7 @@ export default function QuestionComponent({
                   iconName="FloppyDisk"
                   label="save"
                   onClick={() => {
-                    updateOrPersistQuestion();
+                    save();
                   }}
                 ></QuestionBtnComponent>
 
@@ -104,8 +129,7 @@ export default function QuestionComponent({
                   iconName="X"
                   label="cancel"
                   onClick={() => {
-                    toggleEditMode();
-                    removeNonPersistedEntries();
+                    reset();
                   }}
                 ></QuestionBtnComponent>
               </>

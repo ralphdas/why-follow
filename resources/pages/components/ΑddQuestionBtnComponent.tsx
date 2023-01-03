@@ -5,14 +5,11 @@ export default function AddQuestionBtnComponent({
 }: {
   onClick?: () => void;
 }) {
-  function onClickHandler() {
-    if (onClick) {
-      onClick();
-    }
-  }
   return (
     <button
-      onClick={onClickHandler}
+      onClick={() => {
+        onClick && onClick();
+      }}
       className="flex items-center justify-center p-6 flex-1 text-gray-600 border-gray-300 hover:bg-gray-900 hover:text-gray-50"
     >
       <span className="text-2xl mr-1 md:mr-0 md:mb-1">
